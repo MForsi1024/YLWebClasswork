@@ -1,4 +1,5 @@
 from flask import Flask, url_for, request, render_template, redirect
+
 from data.login_form import LoginForm
 
 app = Flask(__name__)
@@ -39,6 +40,11 @@ def login():
     if form.validate_on_submit():
         return redirect('/answer')
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route("/table/<pol>/<age>")
+def table(pol, age):
+    return render_template('table.html', pol=pol, age=age, title='Цвет каюты')
 
 
 if __name__ == '__main__':
