@@ -1,9 +1,12 @@
 h1 {color: #ff0000;
-text-align: left;
+text-align: center;
 }
+
 h1.login{
+text-align: left;
 background: url(img/MARS-2-7.png) no-repeat;
-padding-left:160px;}
+padding-left: 155px;}
+
 h2 {text-align: center;}
 
 form.login_form {
@@ -14,4 +17,9 @@ form.login_form {
     border: 1px solid gray;
     border-radius: 5px;
     padding: 10px;
+}
+table {
+width: 60%;
+align: center;
+border:  2px;
 }

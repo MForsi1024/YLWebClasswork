@@ -1,5 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<h2>Журнал работ</h2>
+{% if current_user.is}
+{% for job in jobs %}
+<h3>Работа # {{job.id }}</h3>
+<div class="table_container">
+    <table>
+        <tr>
+            <td class="title" width="400px">Название работы</td>
+            <td class="title" width="150px">Лидер команды</td>
+            <td class="title" width="100px">Продолжительность</td>
+            <td class="title" width="200px">Команда</td>
+            <td class="title" width="100px">Закончена</td>
+        </tr>
+        <tr>
+            <td>{{ job.job.capitalize() }}</td>
+            <td>{{ names[job.team_leader][0] }} {{ names[job.team_leader][1] }}</td>
+            <td>{{ job.work_size }} часов</td>
+            <td>{{ job.collaborators }}</td>
+            {% if job.is_finished %}
+            <td>ДА</td>
+            {% else %}
+            <td>НЕТ</td>
+            {% endif %}
+        </tr>
+    </table>
+</div>
+{% endfor %}
 {% endblock %}
