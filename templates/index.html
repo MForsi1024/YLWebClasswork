@@ -2,7 +2,13 @@
 
 {% block content %}
 <h2>Журнал работ</h2>
-{% if current_user.is}
+{% if current_user.is_authenticated%}
+<div>
+    <a href="/add_job" class="btn btn-warning">
+        Добавить работу
+    </a>
+</div>
+{% endif %}
 {% for job in jobs %}
 <h3>Работа # {{job.id }}</h3>
 <div class="table_container">
@@ -26,6 +32,13 @@
             {% endif %}
         </tr>
     </table>
+    {% if current_user.is_authenticated and current_user.id == job.team_leader or current_user.id == 1 %}
+    <div>
+        <a href="/edit_job/{{ job.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+    </div>
+    {% endif %}
 </div>
 {% endfor %}
 {% endblock %}

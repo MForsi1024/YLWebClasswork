@@ -1,14 +1,17 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request, make_response, jsonify
 from data.jobs import Jobs
 from data.login_form import LoginForm
-from data import db_session
+from data import db_session, users_resource
 from data.my_jobs import JobForm
 from data.register_form import RegisterForm
 from data.users import User
 from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_restful import reqparse, abort, Api, Resource
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+api = Api(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -124,6 +127,52 @@ def add_job():
     return render_template('my_jobs.html', title='Авторизация', form=form)
 
 
+# @app.route('/edit_job/<int:id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_job(id):
+#     form = JobForm()
+#     if request.method == "GET":
+#         db_sess = db_session.create_session()
+#         news = db_sess.query(News).filter(News.id == id,
+#                                           News.user == current_user
+#                                           ).first()
+#         if news:
+#             form.title.data = news.title
+#             form.content.data = news.content
+#             form.is_private.data = news.is_private
+#     if form.validate_on_submit():
+#         db_sess = db_session.create_session()
+#         news = db_sess.query(News).filter(News.id == id,
+#                                           News.user == current_user
+#                                           ).first()
+#         if news:
+#             news.title = form.title.data
+#             news.content = form.content.data
+#             news.is_private = form.is_private.data
+#             db_sess.commit()
+#             return redirect('/')
+#         else:
+#             abort(404)
+#     return render_template('news.html',
+#                            title='Редактирование новости',
+#                            form=form
+#                            )
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
+
+
 if __name__ == '__main__':
     db_session.global_init("db/mars_explorer.db")
+    # для списка объектов
+    api.add_resource(users_resource.UserListResource, '/api/v2/user')
+
+    # для одного объекта
+    api.add_resource(users_resource.UserResource, '/api/v2/user/<int:user_id>')
     app.run(port=8080, host='127.0.0.1')
